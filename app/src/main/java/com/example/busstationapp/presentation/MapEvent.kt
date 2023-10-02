@@ -1,4 +1,4 @@
 package com.example.busstationapp.presentation
 
-class MapEvent {
+sealed class MapEvent {
 }
