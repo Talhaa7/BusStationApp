@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,33 +38,52 @@ fun MapScreen(
 
     Box(
         modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
     ) {
 
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
-            uiSettings = uiSettings
+            uiSettings = uiSettings,
+            onMapClick =  {
+                viewModel.onEvent(MapEvent.OnMapClick)
+            }
         ) {
-            state.busStations.forEach {
-                it.latLng?.let { it1 ->
+            state.busStations.forEach {uiModel->
+                uiModel.latLng?.let { it1 ->
                     Marker(
                         position = it1,
-                        title = "${it.tripCount} Trips"
+                        title = "${uiModel.tripCount} Trips",
+                        onClick = {
+                            uiModel.id?.let {
+                                viewModel.onEvent(MapEvent.OnMarkerClick(uiModel.id))
+                            }
+                            true
+                        }
                     )
                 }
             }
 
+
         }
 
-        Button(
-            onClick = {
-                      navController.navigate(route = Screen.ListTripScreen.passBusStationId("400"))
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text("List Trips")
+        if (state.selectedMarkerId != null) {
+            Button(
+                onClick = {
+                    viewModel.onEvent(MapEvent.ListTripButtonClick)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            ) {
+                Text("List Trips")
+            }
+
         }
 
+
+    }
+    state.navigateWithMarkerId?.let {
+        navController.navigate(route = Screen.ListTripScreen.passBusStationId("$it"))
+        viewModel.onEvent(MapEvent.NavigatedWithMarkerId)
     }
 }

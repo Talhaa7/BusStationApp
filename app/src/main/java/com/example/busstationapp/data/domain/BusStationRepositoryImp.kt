@@ -35,10 +35,8 @@ class BusStationRepositoryImp @Inject constructor(private val stationsApi: Stati
 
     override suspend fun postTripBook(stationId: String, tripId: String): Flow<Resource<Trip>> {
         return flow {
-            println("atma")
 
             try {
-                println("istek atıldı")
                 val postListBook = stationsApi.postTripBook(stationId, tripId)
                 emit(Resource.Success(
                     data = postListBook

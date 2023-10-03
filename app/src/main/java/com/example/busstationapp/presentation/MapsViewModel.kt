@@ -20,6 +20,9 @@ class MapsViewModel @Inject constructor(
     private val _state = MutableStateFlow(MapUiModel())
     val state = _state.asStateFlow()
 
+    //private val _showButtonState = MutableStateFlow(Boolean)
+
+
     init {
         getStations()
     }
@@ -46,5 +49,40 @@ class MapsViewModel @Inject constructor(
 
     }
 
+    fun onEvent(event: MapEvent) {
+        when(event) {
+            MapEvent.ListTripButtonClick -> {
+                _state.update {
+                    it.copy(
+                        navigateWithMarkerId = it.selectedMarkerId
+                    )
+                }
 
+            }
+
+            MapEvent.OnMapClick -> {
+                _state.update {
+                    it.copy(
+                        selectedMarkerId = null
+                    )
+                }
+            }
+
+            is MapEvent.OnMarkerClick -> {
+                _state.update {
+                    it.copy(
+                        selectedMarkerId = event.markerId
+                    )
+                }
+            }
+
+            MapEvent.NavigatedWithMarkerId -> {
+                _state.update {
+                    it.copy(
+                        navigateWithMarkerId = null
+                    )
+                }
+            }
+        }
+    }
 }
