@@ -6,5 +6,6 @@ import com.google.android.gms.maps.model.LatLng
 data class BusStationMapUiModel(
     val latLng: LatLng? = null,
     val tripCount: String? = null,
-    val trips: List<Trip>? = emptyList()
+    val trips: List<Trip>? = emptyList(),
+    val id: Int? = null
 )

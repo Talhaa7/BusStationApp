@@ -1,11 +1,13 @@
 package com.example.busstationapp.data.domain
 
 import com.example.busstationapp.data.remote.StationsApi
+import com.example.busstationapp.data.remote.Trip
 import com.example.busstationapp.presentation.model.BusStationMapUiModel
 import com.example.busstationapp.utils.Resource
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class BusStationRepositoryImp @Inject constructor(private val stationsApi: StationsApi): BusStationRepository{
@@ -22,11 +24,34 @@ class BusStationRepositoryImp @Inject constructor(private val stationsApi: Stati
                     BusStationMapUiModel(
                         latLng,
                         it.trips_count.toString(),
-                        it.trips
+                        it.trips,
+                        it.id
                     )
                 }
             )
             )
+        }
+    }
+
+    override suspend fun postTripBook(stationId: String, tripId: String): Flow<Resource<Trip>> {
+        return flow {
+            println("atma")
+
+            try {
+                println("istek atıldı")
+                val postListBook = stationsApi.postTripBook(stationId, tripId)
+                emit(Resource.Success(
+                    data = postListBook
+                ))
+            } catch (e: HttpException) {
+                if (e.code() == 404) {
+                    emit(Resource.Error(
+                        "404"
+                    ))
+                } else {
+                    emit(Resource.Error("other"))
+                }
+            }
         }
     }
 
