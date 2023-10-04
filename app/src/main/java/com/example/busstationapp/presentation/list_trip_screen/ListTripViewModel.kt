@@ -1,11 +1,10 @@
-package com.example.busstationapp.presentation
+package com.example.busstationapp.presentation.list_trip_screen
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.busstationapp.BUS_STATION_ID
-import com.example.busstationapp.ListTripEvent
 import com.example.busstationapp.data.domain.BusStationRepository
+import com.example.busstationapp.navigation.BUS_STATION_ID
 import com.example.busstationapp.presentation.model.ListTripUiModel
 import com.example.busstationapp.presentation.model.MapUiModel
 import com.example.busstationapp.utils.Resource
@@ -25,17 +24,16 @@ class ListTripViewModel @Inject constructor(
     private val _state = MutableStateFlow(ListTripUiModel())
     val state = _state.asStateFlow()
 
+    //private val _navigateState = MutableStateFlow(false)
+    //val navigateState = _navigateState.asStateFlow()
 
     init {
-
         val argument = savedStateHandle.get<String>(BUS_STATION_ID).orEmpty()
         _state.update {
             it.copy(
                 stationId = argument
             )
         }
-
-
     }
 
     private fun bookTrip(tripId: Int) {
@@ -46,9 +44,12 @@ class ListTripViewModel @Inject constructor(
             ).collect { resource ->
                 when (resource) {
                     is Resource.Success -> {
-                        println(resource.data)
+                        _state.update {
+                            it.copy(
+                                navigateBack = true
+                            )
+                        }
                     }
-
                     is Resource.Error -> {
                         _state.update {
                             it.copy(
@@ -56,14 +57,10 @@ class ListTripViewModel @Inject constructor(
                             )
                         }
                     }
-
                     else -> {
-
                     }
                 }
-
             }
-
         }
     }
 
@@ -71,13 +68,18 @@ class ListTripViewModel @Inject constructor(
         when (event) {
             is ListTripEvent.ClickBook -> {
                 bookTrip(event.tripId)
-
             }
-
             ListTripEvent.DismissDialog -> {
                 _state.update {
                     it.copy(
                         showDialog = false
+                    )
+                }
+            }
+            ListTripEvent.NavigatedBack -> {
+                _state.update {
+                    it.copy(
+                        navigateBack = false
                     )
                 }
             }
@@ -96,6 +98,4 @@ class ListTripViewModel @Inject constructor(
             )
         }
     }
-
-
 }

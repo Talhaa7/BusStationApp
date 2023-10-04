@@ -1,4 +1,4 @@
-package com.example.busstationapp
+package com.example.busstationapp.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,9 +12,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.busstationapp.presentation.ListTripScreen
-import com.example.busstationapp.presentation.MapScreen
-import com.example.busstationapp.presentation.MapsViewModel
+import com.example.busstationapp.presentation.list_trip_screen.ListTripScreen
+import com.example.busstationapp.presentation.map_screen.MapScreen
+import com.example.busstationapp.presentation.map_screen.MapsViewModel
 
 @Composable
 fun SetupNavGraph(
@@ -26,8 +26,9 @@ fun SetupNavGraph(
     ) {
         composable(
             route = Screen.MapScreen.route,
-        ) {
-            MapScreen(navController = navController)
+        ) {entry->
+            val stationId = entry.savedStateHandle.get<String>("station_id")
+            MapScreen(navController = navController, stationId = stationId)
         }
 
         composable(
@@ -38,7 +39,7 @@ fun SetupNavGraph(
         ) {entry ->
             val viewModel = entry.sharedViewModel<MapsViewModel>(navController)
             val state by viewModel.state.collectAsStateWithLifecycle()
-            ListTripScreen(state)
+            ListTripScreen(state, navController = navController)
         }
     }
 }

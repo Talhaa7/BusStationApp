@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.busstationapp.navigation.SetupNavGraph
 import com.example.busstationapp.ui.theme.BusStationAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 

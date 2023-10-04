@@ -1,4 +1,4 @@
-package com.example.busstationapp
+package com.example.busstationapp.navigation
 
 const val BUS_STATION_ID = "id"
 

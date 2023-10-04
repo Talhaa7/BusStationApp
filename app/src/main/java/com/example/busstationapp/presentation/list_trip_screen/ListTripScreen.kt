@@ -1,4 +1,4 @@
-package com.example.busstationapp.presentation
+package com.example.busstationapp.presentation.list_trip_screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,24 +15,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.busstationapp.ListTripEvent
+import androidx.navigation.NavController
 import com.example.busstationapp.presentation.model.ListTripUiModel
 import com.example.busstationapp.presentation.model.MapUiModel
 
 @Composable
 fun ListTripScreen(
     sharedState: MapUiModel,
-    viewModel: ListTripViewModel = hiltViewModel()
+    viewModel: ListTripViewModel = hiltViewModel(),
+    navController: NavController
 
 ) {
 
     viewModel.initTrips(sharedState)
     val state : ListTripUiModel by viewModel.state.collectAsStateWithLifecycle()
+    //val navigateState: Boolean by viewModel.navigateState.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
-
     )
     {
         LazyColumn(
@@ -42,11 +43,10 @@ fun ListTripScreen(
         ) {
             items(state.tripList) { item ->
 
-                ListTripItem(item) {
+                ListTripItem(item, navController = navController) {
                     viewModel.onEvent(ListTripEvent.ClickBook(it))
                 }
             }
-
         }
     }
 
@@ -57,10 +57,17 @@ fun ListTripScreen(
             text = { Text(text = "Please select another one") },
             confirmButton = {
                 Button(onClick = { viewModel.onEvent(ListTripEvent.DismissDialog) }) {
-
                     Text(text = "Select a Trip")
-
                 }
-            })
+            }
+        )
     }
+
+    /*if (state.navigateBack) {
+        viewModel.onEvent(ListTripEvent.NavigatedBack)
+        navController.previousBackStackEntry
+            ?.savedStateHandle
+            ?.set("station_id", state.stationId)
+        navController.popBackStack()
+    }*/
 }

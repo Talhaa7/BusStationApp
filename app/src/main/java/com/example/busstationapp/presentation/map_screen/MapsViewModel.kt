@@ -1,4 +1,4 @@
-package com.example.busstationapp.presentation
+package com.example.busstationapp.presentation.map_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -63,7 +63,8 @@ class MapsViewModel @Inject constructor(
             MapEvent.OnMapClick -> {
                 _state.update {
                     it.copy(
-                        selectedMarkerId = null
+                        selectedMarkerId = null,
+
                     )
                 }
             }
@@ -71,7 +72,8 @@ class MapsViewModel @Inject constructor(
             is MapEvent.OnMarkerClick -> {
                 _state.update {
                     it.copy(
-                        selectedMarkerId = event.markerId
+                        selectedMarkerId = event.markerId,
+
                     )
                 }
             }
