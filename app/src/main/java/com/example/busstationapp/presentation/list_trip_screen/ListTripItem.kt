@@ -13,19 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.busstationapp.data.remote.Trip
 
 @Composable
 fun ListTripItem(
     item: Trip,
-    viewModel: ListTripViewModel = hiltViewModel(),
-    navController: NavController,
     onBookClick: (tripId: Int) -> Unit
     ) {
-    //val navigateState: Boolean by viewModel.navigateState.collectAsStateWithLifecycle()
-
     Row(
         modifier = Modifier
             .fillMaxWidth()

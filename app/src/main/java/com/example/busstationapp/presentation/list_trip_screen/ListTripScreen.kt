@@ -64,7 +64,7 @@ fun ListTripScreen(
         ) {
             items(state.tripList) { item ->
 
-                ListTripItem(item, navController = navController) {
+                ListTripItem(item) {
                     viewModel.onEvent(ListTripEvent.ClickBook(it))
                 }
 

@@ -51,9 +51,6 @@ fun MapScreen(
         viewModel.onEvent(MapEvent.OnCompletedWithStationId(stationId.toInt()))
     }
 
-    println(stationId)
-
-
     val pointIcon = remember {
         mutableStateOf<BitmapDescriptor?>(null)
     }
