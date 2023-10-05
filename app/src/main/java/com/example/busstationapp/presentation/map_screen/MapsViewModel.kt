@@ -85,6 +85,24 @@ class MapsViewModel @Inject constructor(
                     )
                 }
             }
+
+            is MapEvent.OnCompletedWithStationId -> {
+
+                val index = _state.value.busStations.indexOfFirst {
+                    it.id == event.id
+                }
+
+                _state.update {
+                    it.copy(
+                        selectedMarkerId = null,
+                        busStations = it.busStations.toMutableList().apply {
+                            this[index] = this[index].copy(
+                                isBookCompleted = true
+                            )
+                        }
+                    )
+                }
+            }
         }
     }
 }

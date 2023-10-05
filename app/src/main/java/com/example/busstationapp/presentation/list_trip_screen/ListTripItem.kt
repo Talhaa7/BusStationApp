@@ -1,12 +1,14 @@
 package com.example.busstationapp.presentation.list_trip_screen
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -27,27 +29,23 @@ fun ListTripItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(4.dp)
-        ) {
-            Text(text = item.bus_name,
-                style = TextStyle(fontWeight = FontWeight.Bold)
-            )
-        }
+
+        Text(modifier = Modifier
+            .weight(1f),
+            text = item.bus_name,
+            style = TextStyle(fontWeight = FontWeight.Bold)
+        )
 
         Text(text = item.time)
+
+        Spacer(modifier = Modifier.width(10.dp))
 
         Button(
             onClick = {
                 onBookClick(item.id)
-                navController.previousBackStackEntry
-                    ?.savedStateHandle
-                    ?.set("station_id", item.id.toString())
-                navController.popBackStack()
             },
 
         ) {

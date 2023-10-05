@@ -80,6 +80,10 @@ dependencies {
     // Google Maps
     implementation ("com.google.android.gms:play-services-maps:18.1.0")
 
+    // Permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
+
+
     //Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.45")
     kapt("com.google.dagger:hilt-android-compiler:2.44")

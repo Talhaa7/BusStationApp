@@ -7,5 +7,6 @@ data class BusStationMapUiModel(
     val latLng: LatLng? = null,
     val tripCount: String? = null,
     val trips: List<Trip>? = emptyList(),
-    val id: Int? = null
+    val id: Int? = null,
+    val isBookCompleted: Boolean = false
 )

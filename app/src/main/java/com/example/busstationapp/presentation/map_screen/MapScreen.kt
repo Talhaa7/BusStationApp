@@ -23,11 +23,13 @@ import com.example.busstationapp.navigation.Screen
 import com.example.busstationapp.presentation.model.MapUiModel
 import com.example.busstationapp.utils.bitmapDescriptorFromVector
 import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 
 
 @Composable
@@ -36,13 +38,17 @@ fun MapScreen(
     navController: NavController,
     stationId: String? = null
 ) {
-    val coordinates = LatLng(41.09297645004368,29.003123581510543)
-    val state : MapUiModel by viewModel.state.collectAsStateWithLifecycle()
+    val coordinates = LatLng(41.09297645004368, 29.003123581510543)
+    val state: MapUiModel by viewModel.state.collectAsStateWithLifecycle()
 
     val uiSettings = remember {
         MapUiSettings(
-            zoomControlsEnabled = false
+            zoomControlsEnabled = true
         )
+    }
+
+    if (stationId != null) {
+        viewModel.onEvent(MapEvent.OnCompletedWithStationId(stationId.toInt()))
     }
 
     println(stationId)
@@ -90,14 +96,14 @@ fun MapScreen(
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             uiSettings = uiSettings,
-            onMapClick =  {
+            onMapClick = {
                 viewModel.onEvent(MapEvent.OnMapClick)
             },
-            /*cameraPositionState = CameraPositionState(
+            cameraPositionState = rememberCameraPositionState {
                 position = CameraPosition(coordinates,10f,0f,0f)
-            )*/
+            }
         ) {
-            state.busStations.forEach { uiModel->
+            state.busStations.forEach { uiModel ->
                 uiModel.latLng?.let { it1 ->
 
                     Marker(
@@ -110,28 +116,21 @@ fun MapScreen(
                             }
                             true
                         },
-                        icon = when (uiModel.id) {
-                            state.selectedMarkerId -> {
-                                selectedPointIcon.value
-                            }
-                            stationId?.toInt() -> {
-                                completedPoint.value
-                            }
-                            else -> {
-                                pointIcon.value
-                            }
+                        icon = if (uiModel.isBookCompleted) {
+                            completedPoint.value
+                        } else if (uiModel.id == state.selectedMarkerId) {
+                            selectedPointIcon.value
+                        } else {
+                            pointIcon.value
                         },
                     )
                 }
             }
-
-
         }
 
         if (state.selectedMarkerId != null) {
             Button(
                 onClick = {
-                    //viewModel.onEvent(MapEvent.ListTripButtonClick)
                     navController.navigate(
                         route = Screen.ListTripScreen.passBusStationId(
                             state.selectedMarkerId.toString()
@@ -144,13 +143,6 @@ fun MapScreen(
             ) {
                 Text("List Trips")
             }
-
         }
-
-
     }
-    /*state.navigateWithMarkerId?.let {
-        navController.navigate(route = Screen.ListTripScreen.passBusStationId("$it"))
-        viewModel.onEvent(MapEvent.NavigatedWithMarkerId)
-    }*/
 }

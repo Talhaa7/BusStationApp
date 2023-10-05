@@ -8,4 +8,6 @@ sealed interface MapEvent {
     object OnMapClick: MapEvent
     object ListTripButtonClick: MapEvent
     object NavigatedWithMarkerId: MapEvent
+
+    data class OnCompletedWithStationId(val id : Int) : MapEvent
 }
